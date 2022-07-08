@@ -18,16 +18,13 @@ function asset_to_number( asset: string ) {
 }
 
 function rex_rate( rexpool: RexPool ) {
-    console.log(rexpool);
     const total_lendable = asset_to_number(rexpool.total_lendable);
     const total_rex = asset_to_number(rexpool.total_rex);
     return total_lendable / total_rex;
 }
 
 export async function get_rexpool_delta(start_blockNum: number, end_blockNum: number, chain: string) {
-    console.log({start_blockNum})
     const start = await get_rexpool( start_blockNum, chain );
-    console.log({end_blockNum})
     const end = await get_rexpool( end_blockNum, chain);
     const total_lendable = asset_to_number(start.total_lendable);
     const start_rex_rate = rex_rate( start );
