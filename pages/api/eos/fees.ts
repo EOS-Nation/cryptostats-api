@@ -1,11 +1,6 @@
-import NextCors from "nextjs-cors"
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { CryptoStatsSDK } from "@cryptostats/sdk"
+import { NextRequest, NextResponse } from 'next/server';
 import { get_blockNum, get_rexpool_delta } from "@utils/getters"
 import { Asset } from "@greymass/eosio"
-import { errorWrapper } from '@utils/error-wrapper'
-
-const sdk = new CryptoStatsSDK();
 
 /**
  * @swagger
@@ -17,7 +12,7 @@ const sdk = new CryptoStatsSDK();
  *     parameters:
  *     - in: query
  *       name: date
- *       description: Historical date query
+ *       description: Historical Date
  *       example: 2022-06-28
  *       schema:
  *         type: string
@@ -41,43 +36,39 @@ const sdk = new CryptoStatsSDK();
  *                   type: string
  *                   description: fees paid in EOS
  *                   example: "365.4881 EOS"
- *                 price:
- *                   type: number
- *                   description: CoinGekco historical EOS price
- *                   example: 0.9871577911162366
- *                 oneDayTotalFees:
- *                   type: number
- *                   description: CryptoStats one day total fees (in USD)
- *                   example: 360.7944203816406
  *
  */
-export default async function handler( req: NextApiRequest, res: NextApiResponse<any> ) {
-  res.setHeader('Cache-Control', 's-maxage=1, stale-while-revalidate=59');
-  await NextCors(req, res);
-  return errorWrapper( endpoint, req, res, __filename );
-}
-
-async function endpoint( req: NextApiRequest, res: NextApiResponse<any> ) {
-  console.time("fees");
-
+export default async (req: NextRequest ) => {
+  const headers = {
+    'Cache-Control': 's-maxage=1, stale-while-revalidate=59',
+    'Access-Control-Allow-Origin': '*'
+  };
   // params
   const chain = "eos";
   const { searchParams } = new URL(req.url || "", "https://crypostats.pinax.network")
   const date = searchParams.get('date')
 
-  // validation
-  if ( !date ) throw '[date] query is required';
-  if ( !date.match(/\d{4}-\d{2}-\d{2}/) ) throw '[date] is invalid (ex: 2022-06-28)'
+  try {
+    // validation
+    if ( !date ) throw '[date] query is required';
+    if ( !date.match(/\d{4}-\d{2}-\d{2}/) ) throw '[date] is invalid (ex: 2022-06-28)'
 
-  // get data
-  const end_block_num = await get_blockNum(`${date}T00:00:00Z`, chain);
-  const start_block_num = end_block_num - 86400 * 2;
-  const delta = await get_rexpool_delta( start_block_num, end_block_num, chain );
-  const price = await sdk.coinGecko.getHistoricalPrice("eos", date);
-  const fees = Asset.fromFloat(delta, Asset.Symbol.from("4,EOS"));
-  const oneDayTotalFees = price * delta;
+    // get data
+    const end_block_num = await get_blockNum(`${date}T00:00:00Z`, chain);
+    const start_block_num = end_block_num - 86400 * 2;
+    const delta = await get_rexpool_delta( start_block_num, end_block_num, chain );
+    const fees = Asset.fromFloat(delta, Asset.Symbol.from("4,EOS"));
 
-  // respones
-  res.status(200).json({ start_block_num, end_block_num, fees, price, oneDayTotalFees });
-  console.timeEnd("fees");
+    // respones
+    return NextResponse.json({ start_block_num, end_block_num, fees }, {headers});
+
+    // error handling
+  } catch (err: any) {
+    const error = err.message || err;
+    return NextResponse.json({ error }, { headers, status: 400 });
+  }
 }
+
+export const config = {
+  runtime: 'experimental-edge',
+};
