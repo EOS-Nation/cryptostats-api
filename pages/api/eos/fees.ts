@@ -59,10 +59,17 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
 
 async function endpoint( req: NextApiRequest, res: NextApiResponse<any> ) {
   console.time("fees");
+
+  // params
   const chain = "eos";
-  const date = String(req.query.date);
+  const { searchParams } = new URL(req.url || "", "https://crypostats.pinax.network")
+  const date = searchParams.get('date')
+
+  // validation
   if ( !date ) throw '[date] query is required';
   if ( !date.match(/\d{4}-\d{2}-\d{2}/) ) throw '[date] is invalid (ex: 2022-06-28)'
+
+  // get data
   const end_block_num = await get_blockNum(`${date}T00:00:00Z`, chain);
   const start_block_num = end_block_num - 86400 * 2;
   const delta = await get_rexpool_delta( start_block_num, end_block_num, chain );
@@ -70,6 +77,7 @@ async function endpoint( req: NextApiRequest, res: NextApiResponse<any> ) {
   const fees = Asset.fromFloat(delta, Asset.Symbol.from("4,EOS"));
   const oneDayTotalFees = price * delta;
 
+  // respones
   res.status(200).json({ start_block_num, end_block_num, fees, price, oneDayTotalFees });
   console.timeEnd("fees");
 }
