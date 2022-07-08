@@ -1,15 +1,15 @@
 import { RexPool } from "utils/interfaces"
 import { core, client } from "utils/config"
 
-export async function get_blockNum(time: string | Date) {
-    const result = await client['eos'].fetchBlockIdByTime(time, "lt");
+export async function get_blockNum(time: string | Date, chain: string) {
+    const result = await client[chain].fetchBlockIdByTime(time, "lt");
     return result.block.num.valueOf();
 }
 
-export async function get_rexpool(blockNum: number): Promise<RexPool> {
+export async function get_rexpool(blockNum: number, chain: string): Promise<RexPool> {
     const code = "eosio";
     const table = "rexpool"
-    const result = await client['eos'].stateTable<RexPool>(code, code, table, {json: true, blockNum});
+    const result = await client[chain].stateTable<RexPool>(code, code, table, {json: true, blockNum});
     return (result.rows[0].json) as any
 }
 
@@ -24,11 +24,11 @@ function rex_rate( rexpool: RexPool ) {
     return total_lendable / total_rex;
 }
 
-export async function get_rexpool_delta(start_blockNum: number, end_blockNum: number) {
+export async function get_rexpool_delta(start_blockNum: number, end_blockNum: number, chain: string) {
     console.log({start_blockNum})
-    const start = await get_rexpool( start_blockNum );
+    const start = await get_rexpool( start_blockNum, chain );
     console.log({end_blockNum})
-    const end = await get_rexpool( end_blockNum );
+    const end = await get_rexpool( end_blockNum, chain);
     const total_lendable = asset_to_number(start.total_lendable);
     const start_rex_rate = rex_rate( start );
     const end_rex_rate = rex_rate( end );
@@ -36,6 +36,6 @@ export async function get_rexpool_delta(start_blockNum: number, end_blockNum: nu
     return delta * total_lendable;
 }
 
-export async function get_info() {
-    return core["eos"].v1.chain.get_info();
+export async function get_info(chain: string) {
+    return core[chain].v1.chain.get_info();
 }
