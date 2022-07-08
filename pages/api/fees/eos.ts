@@ -56,6 +56,7 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
 }
 
 async function endpoint( req: NextApiRequest, res: NextApiResponse<any> ) {
+  console.time("fees");
   const date = String(req.query.date);
   if ( !date ) throw '[date] query is required';
   if ( !date.match(/\d{4}-\d{2}-\d{2}/) ) throw '[date] is invalid (ex: 2022-06-28)'
@@ -67,4 +68,5 @@ async function endpoint( req: NextApiRequest, res: NextApiResponse<any> ) {
   const oneDayTotalFees = price * delta;
 
   res.status(200).json({ start_block_num, end_block_num, fees, price, oneDayTotalFees });
+  console.timeEnd("fees");
 }
