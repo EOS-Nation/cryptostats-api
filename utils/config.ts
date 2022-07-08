@@ -1,8 +1,7 @@
 import { APIClient } from "@greymass/eosio"
 import { DfuseClient, createDfuseClient, InMemoryApiTokenStore } from "@dfuse/client";
 
-// ;(global as any).fetch = require("node-fetch")
-;(global as any).WebSocket = {};
+;(global as any).WebSocket = {}; // ws package not supported by edge functions
 
 const apiKey = process.env.DFUSE_API_KEY;
 

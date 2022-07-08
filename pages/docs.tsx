@@ -10,8 +10,8 @@ export default function Index() {
   return (
     <div>
       <Head>
-        <title>Pinax Cryptostats API</title>
-        <meta name="description" content="Pinax Cryptostats API" />
+        <title>Pinax CryptoStats API</title>
+        <meta name="description" content="Pinax CryptoStats API" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SwaggerUI url="/api/swagger.json" />
