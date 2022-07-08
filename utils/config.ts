@@ -1,5 +1,5 @@
 import { APIClient } from "@greymass/eosio"
-import { DfuseClient, createDfuseClient } from "@dfuse/client";
+import { DfuseClient, createDfuseClient, InMemoryApiTokenStore } from "@dfuse/client";
 
 ;(global as any).fetch = require("node-fetch")
 ;(global as any).WebSocket = require("ws")
@@ -13,5 +13,5 @@ export const core: {[chain: string]: APIClient} = {
 }
 
 export const client: {[chain: string]: DfuseClient} = {
-    eos: createDfuseClient({ apiKey, network: 'eos.dfuse.eosnation.io' }),
+    eos: createDfuseClient({ apiKey, network: 'eos.dfuse.eosnation.io', apiTokenStore: new InMemoryApiTokenStore() }),
 }
