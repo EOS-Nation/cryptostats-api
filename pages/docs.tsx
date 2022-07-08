@@ -14,7 +14,7 @@ export default function Index() {
         <meta name="description" content="Pinax Cryptostats API" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <SwaggerUI url="/api/doc" />
+      <SwaggerUI url="/api/swagger.json" />
     </div>
   );
 }

@@ -11,6 +11,8 @@ const sdk = new CryptoStatsSDK();
  * @swagger
  * /api/eos/fees:
  *   get:
+ *     tags:
+ *       - Fees
  *     description: Returns one day total fees for the EOS Network using daily average of REX revenue earned.
  *     parameters:
  *     - in: query
