@@ -17,6 +17,7 @@
   "dependencies": {
     "@dfuse/client": "^0.3.21",
     "@greymass/eosio": "*",
+    "axios": "^0.27.2",
     "next": "^12.1.7-canary.29",
     "next-swagger-doc": "^0.3.4",
     "react": "18.0.0",
