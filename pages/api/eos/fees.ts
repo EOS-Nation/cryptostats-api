@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { get_blockNum, get_rexpool_delta } from "@utils/getters"
+import { get_blockNum, get_rexpool, get_rexpool_delta } from "@utils/getters"
 import { Asset } from "@greymass/eosio"
 
 /**
@@ -56,7 +56,9 @@ export default async (req: NextRequest ) => {
     // get data
     const end_block_num = await get_blockNum(`${date}T00:00:00Z`, chain);
     const start_block_num = end_block_num - 86400 * 2;
-    const delta = await get_rexpool_delta( start_block_num, end_block_num, chain );
+    const start = await get_rexpool( start_block_num, chain );
+    const end = await get_rexpool( end_block_num, chain);
+    const delta = get_rexpool_delta(start, end);
     const fees = Asset.fromFloat(delta, Asset.Symbol.from("4,EOS"));
 
     // respones
