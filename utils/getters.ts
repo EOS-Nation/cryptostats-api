@@ -1,9 +1,22 @@
-import { RexPool } from "utils/interfaces"
+import { RexPool, Stat, Global4 } from "utils/interfaces"
 import { core, client } from "utils/config"
 
 export async function get_blockNum(time: string | Date, chain: string) {
     const result = await client[chain].fetchBlockIdByTime(time, "lt");
     return result.block.num.valueOf();
+}
+
+export async function get_inflation(blockNum: number, chain: string): Promise<Global4> {
+    const code = "eosio";
+    const table = "global4"
+    const result = await client[chain].stateTable<any>(code, code, table, {json: true, blockNum});
+    return (result.rows[0].json) as any
+}
+
+export async function get_supply(code: string, symcode: string, blockNum: number, chain: string): Promise<Stat> {
+    const table = "stat"
+    const result = await client[chain].stateTable<any>(code, symcode, table, {json: true, blockNum});
+    return (result.rows[0].json) as any
 }
 
 export async function get_rexpool(blockNum: number, chain: string): Promise<RexPool> {
