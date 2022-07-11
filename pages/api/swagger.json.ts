@@ -9,5 +9,6 @@ const swaggerHandler = withSwagger({
     },
   },
   schemaFolders: ['models'],
+  apiFolder: 'pages/api',
 });
 export default swaggerHandler();
