@@ -4,7 +4,8 @@ const swaggerHandler = withSwagger({
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'NextJS Swagger',
+      title: 'Pinax CryptoStats API',
+      description: ""
     },
     tags: [
       {

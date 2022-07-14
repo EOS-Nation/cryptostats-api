@@ -11,6 +11,6 @@ export default async (req: NextRequest) => {
   return NextResponse.json(info, {headers});
 }
 
-export const config = {
-  runtime: 'experimental-edge',
-};
+// export const config = {
+//   runtime: 'experimental-edge',
+// };
