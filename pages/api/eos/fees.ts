@@ -1,4 +1,4 @@
-import type { NextRequest } from 'next/server';
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { get_blockNum, get_rexpool, get_rexpool_delta } from "@utils/getters"
 import { Asset } from "@greymass/eosio"
 
@@ -38,7 +38,7 @@ import { Asset } from "@greymass/eosio"
  *                   example: "365.4881 EOS"
  *
  */
-export default async (req: NextRequest ) => {
+export default async function handler( req: NextApiRequest, res: NextApiResponse<any> ) {
   const headers = {
     'Cache-Control': 's-maxage=1, stale-while-revalidate=59',
     'Access-Control-Allow-Origin': '*'
@@ -61,13 +61,15 @@ export default async (req: NextRequest ) => {
     const delta = get_rexpool_delta(start, end);
     const fees = Asset.fromFloat(delta, Asset.Symbol.from("4,EOS"));
 
-    // respones
-    return new Response(JSON.stringify({ start_block_num, end_block_num, fees }), {headers});
+    // response
+    return res.status(200).json({ start_block_num, end_block_num, fees })
+    // return new Response(JSON.stringify({ start_block_num, end_block_num, fees }), {headers});
 
     // error handling
   } catch (err: any) {
     const error = err.message || err;
-    return new Response(JSON.stringify({ error }), { headers, status: 400 });
+    return res.status(400).json({ error })
+    // return new Response(JSON.stringify({ error }), { headers, status: 400 });
   }
 }
 

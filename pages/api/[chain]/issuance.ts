@@ -1,4 +1,5 @@
-import type { NextRequest } from 'next/server';
+// import type { NextRequest } from 'next/server';
+import type { NextApiRequest, NextApiResponse } from 'next'
 import { get_blockNum, get_inflation, get_supply } from "@utils/getters"
 
 /**
@@ -37,7 +38,7 @@ import { get_blockNum, get_inflation, get_supply } from "@utils/getters"
  *                   example: 0.0295588022415444
  *
  */
-export default async (req: NextRequest ) => {
+export default async function handler( req: NextApiRequest, res: NextApiResponse<any> ) {
   const headers = {
     'Cache-Control': 's-maxage=1, stale-while-revalidate=59',
     'Access-Control-Allow-Origin': '*'
@@ -58,12 +59,14 @@ export default async (req: NextRequest ) => {
     const { supply } = await get_supply("eosio.token", "EOS", block_num, chain);
 
     // respones
-    return new Response(JSON.stringify({ block_num, supply, continuous_rate }), {headers});
+    return res.status(200).json({ block_num, supply, continuous_rate })
+    // return new Response(JSON.stringify({ block_num, supply, continuous_rate }), {headers});
 
     // error handling
   } catch (err: any) {
     const error = err.message || err;
-    return new Response(JSON.stringify({ error }), { headers, status: 400 });
+    return res.status(400).json({ error })
+    // return new Response(JSON.stringify({ error }), { headers, status: 400 });
   }
 }
 
