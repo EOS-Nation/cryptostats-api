@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { get_blockNum, get_inflation, get_supply } from "@utils/getters"
 
 /**
@@ -58,15 +58,15 @@ export default async (req: NextRequest ) => {
     const { supply } = await get_supply("eosio.token", "EOS", block_num, chain);
 
     // respones
-    return NextResponse.json({ block_num, supply, continuous_rate }, {headers});
+    return new Response(JSON.stringify({ block_num, supply, continuous_rate }), {headers});
 
     // error handling
   } catch (err: any) {
     const error = err.message || err;
-    return NextResponse.json({ error }, { headers, status: 400 });
+    return new Response(JSON.stringify({ error }), { headers, status: 400 });
   }
 }
 
-// export const config = {
-//   runtime: 'experimental-edge',
-// };
+export const config = {
+  runtime: 'experimental-edge',
+};

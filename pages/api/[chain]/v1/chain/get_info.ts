@@ -1,5 +1,4 @@
-// import NextCors from "nextjs-cors"
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { core } from "@utils/config"
 
 export default async (req: NextRequest) => {
@@ -8,9 +7,9 @@ export default async (req: NextRequest) => {
     'Access-Control-Allow-Origin': '*'
   };
   const info = await core["eos"].v1.chain.get_info();
-  return NextResponse.json(info, {headers});
+  return new Response(JSON.stringify(info), {headers});
 }
 
-// export const config = {
-//   runtime: 'experimental-edge',
-// };
+export const config = {
+  runtime: 'experimental-edge',
+};

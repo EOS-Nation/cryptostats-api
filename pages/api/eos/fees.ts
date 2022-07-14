@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { get_blockNum, get_rexpool, get_rexpool_delta } from "@utils/getters"
 import { Asset } from "@greymass/eosio"
 
@@ -62,15 +62,15 @@ export default async (req: NextRequest ) => {
     const fees = Asset.fromFloat(delta, Asset.Symbol.from("4,EOS"));
 
     // respones
-    return NextResponse.json({ start_block_num, end_block_num, fees }, {headers});
+    return new Response(JSON.stringify({ start_block_num, end_block_num, fees }), {headers});
 
     // error handling
   } catch (err: any) {
     const error = err.message || err;
-    return NextResponse.json({ error }, { headers, status: 400 });
+    return new Response(JSON.stringify({ error }), { headers, status: 400 });
   }
 }
 
-// export const config = {
-//   runtime: 'experimental-edge',
-// };
+export const config = {
+  runtime: 'experimental-edge',
+};
