@@ -3,7 +3,7 @@ import { get_blockNum, get_rexpool, get_rexpool_delta } from "@utils/getters"
 import { Asset } from "@greymass/eosio"
 
 /**
- * @swagger
+ * @openapi
  * /api/eos/fees:
  *   get:
  *     tags:
@@ -36,7 +36,6 @@ import { Asset } from "@greymass/eosio"
  *                   type: string
  *                   description: fees paid in EOS
  *                   example: "365.4881 EOS"
- *
  */
 export default async function handler( req: NextApiRequest, res: NextApiResponse<any> ) {
   const headers = {

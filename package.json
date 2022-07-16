@@ -1,11 +1,5 @@
 {
   "private": true,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@now/next"
-    }
-  ],
   "name": "cryptostats",
   "version": "0.1.0",
   "scripts": {

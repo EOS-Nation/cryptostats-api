@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { get_blockNum, get_inflation, get_supply } from "@utils/getters"
 
 /**
- * @swagger
+ * @openapi
  * /api/eos/issuance:
  *   get:
  *     tags:
@@ -36,7 +36,6 @@ import { get_blockNum, get_inflation, get_supply } from "@utils/getters"
  *                   type: number
  *                   description: yearly continuous rate of inflation
  *                   example: 0.0295588022415444
- *
  */
 export default async function handler( req: NextApiRequest, res: NextApiResponse<any> ) {
   const headers = {
@@ -47,7 +46,7 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
   const chain = "eos";
   const { searchParams } = new URL(req.url || "", "https://crypostats.pinax.network")
   const date = searchParams.get('date')
-
+0
   try {
     // validation
     if ( !date ) throw '[date] query is required';
