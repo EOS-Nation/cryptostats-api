@@ -41,7 +41,10 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
   const headers = {
     'Cache-Control': 's-maxage=1, stale-while-revalidate=59',
     'Access-Control-Allow-Origin': '*'
-  };
+  }
+  for ( const [key, value] of Object.entries(headers)) {
+    res.setHeader(key, value);
+  }
   // params
   const chain = "eos";
   const { searchParams } = new URL(req.url || "", "https://crypostats.pinax.network")

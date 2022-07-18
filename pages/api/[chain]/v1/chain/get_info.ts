@@ -13,9 +13,7 @@ import { core } from "@utils/config"
  *       '200':
  *         description: OK
  *         content:
- *           application/json:
- *             schema:
- *               type: object
+ *           application/json
  */
 export default async function handler(req: NextRequest) {
   const headers = {
