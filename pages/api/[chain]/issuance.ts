@@ -1,21 +1,31 @@
-// import type { NextRequest } from 'next/server';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { get_blockNum, get_inflation, get_supply } from "@utils/getters"
+import { setCache } from "@utils/utils"
 
 /**
  * @openapi
- * /api/eos/issuance:
+ * /api/{chain}/issuance:
  *   get:
  *     tags:
  *       - Issuance
  *     description: The amount of tokens issued in the past day.
  *     parameters:
- *     - in: query
- *       name: date
- *       description: Historical Date
- *       example: 2022-06-28
+ *     - name: chain
+ *       in: path
+ *       required: true
+ *       description: "EOSIO chain selection"
  *       schema:
  *         type: string
+ *         enum: [ eos ]
+ *         default: eos
+ *     - in: query
+ *       name: date
+ *       description: "Historical Date (format: YYYY-MM-DD)"
+ *       example: 2022-06-28
+ *       required: true
+ *       schema:
+ *         type: string
+ *         pattern: '^\d{4}-\d{2}-\d{2}$'
  *     responses:
  *       '200':
  *         description: OK
@@ -38,22 +48,19 @@ import { get_blockNum, get_inflation, get_supply } from "@utils/getters"
  *                   example: 0.0295588022415444
  */
 export default async function handler( req: NextApiRequest, res: NextApiResponse<any> ) {
-  const headers = {
-    'Cache-Control': 's-maxage=1, stale-while-revalidate=59',
-    'Access-Control-Allow-Origin': '*'
-  }
-  for ( const [key, value] of Object.entries(headers)) {
-    res.setHeader(key, value);
-  }
+  setCache(res);
+
   // params
-  const chain = "eos";
-  const { searchParams } = new URL(req.url || "", "https://crypostats.pinax.network")
-  const date = searchParams.get('date')
-0
+  let { chain, date } = req.query;
+  chain = String(chain);
+  date = String(date);
+
   try {
     // validation
+    if ( !chain ) throw '[chain] query is required';
     if ( !date ) throw '[date] query is required';
-    if ( !date.match(/\d{4}-\d{2}-\d{2}/) ) throw '[date] is invalid (ex: 2022-06-28)'
+    if ( !date.match(/\d{4}-\d{2}-\d{2}/) ) throw '[date] is invalid (ex: 2022-06-28)';
+    if ( new Date(`${date}T00:00:00Z`) > new Date() ) throw '[date] must be in the past';
 
     // get data
     const block_num = await get_blockNum(`${date}T00:00:00Z`, chain);
@@ -62,16 +69,10 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
 
     // respones
     return res.status(200).json({ block_num, supply, continuous_rate })
-    // return new Response(JSON.stringify({ block_num, supply, continuous_rate }), {headers});
 
     // error handling
   } catch (err: any) {
     const error = err.message || err;
     return res.status(400).json({ error })
-    // return new Response(JSON.stringify({ error }), { headers, status: 400 });
   }
 }
-
-// export const config = {
-//   runtime: 'experimental-edge',
-// };

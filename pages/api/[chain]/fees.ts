@@ -1,21 +1,32 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { get_blockNum, get_rexpool, get_rexpool_delta } from "@utils/getters"
 import { Asset } from "@greymass/eosio"
+import { setCache } from "@utils/utils"
 
 /**
  * @openapi
- * /api/eos/fees:
+ * /api/{chain}/fees:
  *   get:
  *     tags:
  *       - Fees
  *     description: Returns one day total fees for the EOS Network using daily average of REX revenue earned.
  *     parameters:
- *     - in: query
- *       name: date
- *       description: Historical Date
- *       example: 2022-06-28
+ *     - name: chain
+ *       in: path
+ *       required: true
+ *       description: "EOSIO chain selection"
  *       schema:
  *         type: string
+ *         enum: [ eos ]
+ *         default: eos
+ *     - in: query
+ *       name: date
+ *       description: "Historical Date (format: YYYY-MM-DD)"
+ *       example: 2022-06-28
+ *       required: true
+ *       schema:
+ *         type: string
+ *         pattern: '^\d{4}-\d{2}-\d{2}$'
  *     responses:
  *       '200':
  *         description: OK
@@ -38,22 +49,22 @@ import { Asset } from "@greymass/eosio"
  *                   example: "365.4881 EOS"
  */
 export default async function handler( req: NextApiRequest, res: NextApiResponse<any> ) {
-  const headers = {
-    'Cache-Control': 's-maxage=1, stale-while-revalidate=59',
-    'Access-Control-Allow-Origin': '*'
-  }
-  for ( const [key, value] of Object.entries(headers)) {
-    res.setHeader(key, value);
-  }
+  setCache(res);
+
   // params
-  const chain = "eos";
-  const { searchParams } = new URL(req.url || "", "https://crypostats.pinax.network")
-  const date = searchParams.get('date')
+  let { chain, date } = req.query;
+  chain = String(chain);
+  date = String(date);
+
+  // const { searchParams } = new URL(req.url || "", "https://crypostats.pinax.network")
+  // const date = searchParams.get('date');
 
   try {
     // validation
+    if ( !chain ) throw '[chain] query is required';
     if ( !date ) throw '[date] query is required';
     if ( !date.match(/\d{4}-\d{2}-\d{2}/) ) throw '[date] is invalid (ex: 2022-06-28)'
+    if ( new Date(`${date}T00:00:00Z`) > new Date() ) throw '[date] must be in the past';
 
     // get data
     const end_block_num = await get_blockNum(`${date}T00:00:00Z`, chain);
@@ -65,16 +76,10 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
 
     // response
     return res.status(200).json({ start_block_num, end_block_num, fees })
-    // return new Response(JSON.stringify({ start_block_num, end_block_num, fees }), {headers});
 
     // error handling
   } catch (err: any) {
     const error = err.message || err;
     return res.status(400).json({ error })
-    // return new Response(JSON.stringify({ error }), { headers, status: 400 });
   }
 }
-
-// export const config = {
-//   runtime: 'experimental-edge',
-// };

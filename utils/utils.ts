@@ -1,10 +1,21 @@
 
 import axios from "axios";
+import type { NextApiResponse } from 'next'
 import { RPC_ENDPOINTS } from "./constants"
 import { GetTableRows, ErrorMessage } from "./interfaces"
 
 export function timeout(ms: number) {
     return new Promise(resolve => setTimeout(() => resolve(true), ms))
+}
+
+export function setCache( res: NextApiResponse ) {
+    const headers = {
+        'Cache-Control': 's-maxage=1, stale-while-revalidate=59',
+        'Access-Control-Allow-Origin': '*'
+    }
+    for ( const [key, value] of Object.entries(headers)) {
+        res.setHeader(key, value);
+    }
 }
 
 export async function get_all_table_rows<T>( code: string, scope: string, table: string, key: string, chain: string = "eos" ): Promise<GetTableRows<T> | null> {
