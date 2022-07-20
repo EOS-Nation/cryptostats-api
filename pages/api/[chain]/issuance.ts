@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { get_blockNum, get_inflation, get_supply } from "@utils/getters"
+import { get_blockNum, get_inflation, get_supply, get_genesis_date } from "@utils/getters"
 import { setCache } from "@utils/utils"
 
 /**
@@ -64,8 +64,9 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
 
     // get data
     const block_num = await get_blockNum(`${date}T00:00:00Z`, chain);
-    const { continuous_rate } = await get_inflation(block_num, chain);
+    if ( block_num < 3 ) throw '[date] first genesis indexed blocks start at ' + get_genesis_date(chain);
     const { supply } = await get_supply("eosio.token", "EOS", block_num, chain);
+    const { continuous_rate } = await get_inflation(block_num, chain);
 
     // respones
     return res.status(200).json({ block_num, supply, continuous_rate })

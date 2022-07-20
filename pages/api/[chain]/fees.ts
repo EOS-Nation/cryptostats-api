@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { get_blockNum, get_rexpool, get_rexpool_delta } from "@utils/getters"
+import { get_blockNum, get_rexpool, get_rexpool_delta, get_genesis_date, get_rex_date, is_rexpool } from "@utils/getters"
 import { Asset } from "@greymass/eosio"
 import { setCache } from "@utils/utils"
 
@@ -56,9 +56,6 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
   chain = String(chain);
   date = String(date);
 
-  // const { searchParams } = new URL(req.url || "", "https://crypostats.pinax.network")
-  // const date = searchParams.get('date');
-
   try {
     // validation
     if ( !chain ) throw '[chain] query is required';
@@ -69,6 +66,9 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
     // get data
     const end_block_num = await get_blockNum(`${date}T00:00:00Z`, chain);
     const start_block_num = end_block_num - 86400 * 2;
+    if ( start_block_num < 3 ) throw '[date] first genesis indexed blocks start at ' + get_genesis_date(chain);
+    if ( !(await is_rexpool( start_block_num, chain ))) throw '[date] REX fees only start at ' + get_rex_date(chain);
+
     const start = await get_rexpool( start_block_num, chain );
     const end = await get_rexpool( end_block_num, chain);
     const delta = get_rexpool_delta(start, end);
