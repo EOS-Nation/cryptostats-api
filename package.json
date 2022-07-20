@@ -1,7 +1,10 @@
 {
   "private": true,
-  "name": "cryptostats",
+  "name": "cryptostats-api",
   "version": "0.1.0",
+  "title": "EOSIO CryptoStats API",
+  "description": "One neutral source of truth for crypto metrics. Used by everyone, managed by the community.",
+  "homepage": "https://forum.cryptostats.community",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
