@@ -5,7 +5,9 @@ const swaggerHandler = withSwagger({
     openapi: '3.0.0',
     info: {
       title: 'EOSIO CryptoStats API',
-      description: "One neutral source of truth for crypto metrics. Used by everyone, managed by the community."
+      description: "One neutral source of truth for crypto metrics. Used by everyone, managed by the community.",
+      contact: { url: "https://forum.cryptostats.community" },
+      license: { name: "Apache 2.0", url: "http://www.apache.org/licenses/LICENSE-2.0.html" }
     },
     tags: [
       {
