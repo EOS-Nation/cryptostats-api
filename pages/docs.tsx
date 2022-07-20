@@ -11,7 +11,7 @@ export default function Index() {
     <div>
       <Head>
         <title>EOSIO CryptoStats API</title>
-        <meta name="description" content="EOSIO CryptoStats API" />
+        <meta name="description" content="One neutral source of truth for crypto metrics. Used by everyone, managed by the community." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SwaggerUI url="/api/swagger.json" />
