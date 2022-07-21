@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { get_blockNum, get_rexpool, get_rexpool_delta, get_genesis_date, get_rex_date, is_rexpool } from "@utils/getters"
+import { get_blockNum, get_rexpool, get_rexpool_delta, get_genesis_date, get_rex_date, is_rexpool, get_rex_block_num, get_core_asset } from "@utils/getters"
 import { Asset } from "@greymass/eosio"
 import { setCache } from "@utils/utils"
 
@@ -66,6 +66,11 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
     // get data
     const end_block_num = await get_blockNum(`${date}T00:00:00Z`, chain);
     const start_block_num = end_block_num - 86400 * 2;
+
+    // return 0 fees instead of throwing error
+    if ( end_block_num < get_rex_block_num( chain ) ) return res.status(200).json({ start_block_num, end_block_num, fees: get_core_asset(chain, 0) })
+
+    // catch errors
     if ( start_block_num < 3 ) throw '[date] first genesis indexed blocks start at ' + get_genesis_date(chain);
     if ( !(await is_rexpool( start_block_num, chain ))) throw '[date] REX fees only start at ' + get_rex_date(chain);
 

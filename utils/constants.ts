@@ -1,3 +1,8 @@
+export const version = "0.1.0";
+export const title = "EOSIO CryptoStats API";
+export const description = "One neutral source of truth for crypto metrics. Used by everyone, managed by the community.";
+export const homepage = "https://forum.cryptostats.community";
+
 export const RPC_NODE_URL: {[key: string]: string} = {
     'eos': 'https://eos.api.eosnation.io',
     'wax': 'https://wax.api.eosnation.io',

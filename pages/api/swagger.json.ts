@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { setCache } from "@utils/utils"
 import { createSwaggerSpec } from 'next-swagger-doc';
-import * as pkg from "../../package.json";
+import { title, description, version, homepage } from "@utils/constants";
 
 export default async function handler( req: NextApiRequest, res: NextApiResponse<any> ) {
   setCache(res);
@@ -9,10 +9,10 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
     definition: {
       openapi: '3.0.0',
       info: {
-        version: pkg.version,
-        title: pkg.title,
-        description: pkg.description,
-        contact: { url: pkg.homepage },
+        version: version,
+        title: title,
+        description: description,
+        contact: { url: homepage },
         license: { name: "Apache 2.0", url: "http://www.apache.org/licenses/LICENSE-2.0.html" }
       },
       tags: [

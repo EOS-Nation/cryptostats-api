@@ -1,5 +1,19 @@
 import { RexPool, Stat, Global4 } from "utils/interfaces"
 import { core, client } from "utils/config"
+import { Asset, Int64 } from "@greymass/eosio"
+
+export function get_core_sym( chain: string )
+{
+    if (chain == "eos") return Asset.Symbol.from("4,EOS");
+    return Asset.Symbol.from("4,EOS");
+}
+
+export function get_core_asset( chain: string, amount: number )
+{
+    const sym = get_core_sym( chain );
+    if (chain == "eos") return new Asset( Int64.from(amount), sym );
+    return new Asset( Int64.from(amount), sym );
+}
 
 export function get_genesis_date( chain: string )
 {
@@ -11,6 +25,12 @@ export function get_rex_date( chain: string )
 {
     if (chain == "eos") return "2019-05-03";
     return "";
+}
+
+export function get_rex_block_num( chain: string )
+{
+    if (chain == "eos") return 56111528;
+    return 0;
 }
 
 export function get_inflation_date( chain: string )
