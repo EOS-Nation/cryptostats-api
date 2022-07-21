@@ -8,7 +8,7 @@ export function get_core_sym( chain: string )
     return Asset.Symbol.from("4,EOS");
 }
 
-export function get_core_asset( chain: string, amount: number )
+export function get_core_asset( chain: string, amount = 0 )
 {
     const sym = get_core_sym( chain );
     if (chain == "eos") return new Asset( Int64.from(amount), sym );
@@ -33,6 +33,12 @@ export function get_rex_block_num( chain: string )
     return 0;
 }
 
+export function get_balance_block_num( chain: string )
+{
+    if (chain == "eos") return 93823;
+    return 0;
+}
+
 export function get_inflation_date( chain: string )
 {
     if (chain == "eos") return "2020-01-04";
@@ -53,6 +59,14 @@ export async function get_inflation(blockNum: number, chain: string): Promise<Gl
     } catch (e) {
         return { continuous_rate: 0.05, inflation_pay_factor: 500, votepay_factor: 400 };
     }
+}
+
+export async function get_balance(owner: string, code: string, symcode: string, blockNum: number, chain: string): Promise<Asset> {
+    const table = "accounts"
+    const scope = owner
+    const result = await client[chain].stateTableRow<any>(code, scope, table, symcode, {json: true, blockNum});
+    if (result.row.json) return Asset.from(result.row.json.balance);
+    return get_core_asset(chain);
 }
 
 export async function get_supply(code: string, symcode: string, blockNum: number, chain: string): Promise<Stat> {
