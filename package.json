@@ -2,7 +2,7 @@
   "private": true,
   "name": "cryptostats-api",
   "version": "0.1.0",
-  "description": "EOSIO CryptoStats API",
+  "description": "Antelope CryptoStats API",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

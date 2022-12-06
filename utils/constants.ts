@@ -1,5 +1,5 @@
-export const version = "0.1.0";
-export const title = "EOSIO CryptoStats API";
+export const version = "0.1.1";
+export const title = "Antelope CryptoStats API";
 export const description = "One neutral source of truth for crypto metrics. Used by everyone, managed by the community.";
 export const homepage = "https://forum.cryptostats.community";
 

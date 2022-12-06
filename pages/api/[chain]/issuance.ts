@@ -13,7 +13,7 @@ import { setCache } from "@utils/utils"
  *     - name: chain
  *       in: path
  *       required: true
- *       description: "EOSIO chain selection"
+ *       description: "Antelope chain selection"
  *       schema:
  *         type: string
  *         enum: [ eos ]

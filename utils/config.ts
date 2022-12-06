@@ -4,6 +4,7 @@ import { DfuseClient, createDfuseClient, InMemoryApiTokenStore } from "@dfuse/cl
 ;(global as any).WebSocket = {}; // ws package not supported by edge functions
 
 const apiKey = process.env.DFUSE_API_KEY;
+if (!apiKey) throw new Error("DFUSE_API_KEY environment variable is required");
 
 export const core: {[chain: string]: APIClient} = {
     eos: new APIClient({ url: "https://eos.api.eosnation.io" }),

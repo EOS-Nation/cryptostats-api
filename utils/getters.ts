@@ -5,6 +5,9 @@ import { Asset, Int64 } from "@greymass/eosio"
 export function get_core_sym( chain: string )
 {
     if (chain == "eos") return Asset.Symbol.from("4,EOS");
+    if (chain == "wax") return Asset.Symbol.from("8,WAX");
+    if (chain == "telos") return Asset.Symbol.from("4,TLOS");
+    if (chain == "ux") return Asset.Symbol.from("4,UX");
     return Asset.Symbol.from("4,EOS");
 }
 
@@ -59,6 +62,16 @@ export async function get_inflation(blockNum: number, chain: string): Promise<Gl
     } catch (e) {
         return { continuous_rate: 0.05, inflation_pay_factor: 500, votepay_factor: 400 };
     }
+}
+
+export async function get_staked(owner: string, blockNum: number, chain: string): Promise<Asset> {
+    const code = "eosio";
+    const table = "voters";
+    const scope = "eosio";
+    const result = await client[chain].stateTableRow<any>(code, scope, table, owner, {json: true, blockNum});
+    const staked = get_core_asset(chain);
+    if (result.row.json) staked.units = Int64.from(result.row.json.staked);
+    return staked;
 }
 
 export async function get_balance(owner: string, code: string, symcode: string, blockNum: number, chain: string): Promise<Asset> {
