@@ -27,6 +27,12 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
           description: "The amount of tokens issued in the past day, in USD.",
           externalDocs: { description: "Find out more", url: "https://cryptostats.community/discover/issuance" },
           version: '0.1.0'
+        },
+        {
+          name: "Issuance",
+          description: "Returns one the amount of coins that are circulating in the market and are in public hands.",
+          externalDocs: { description: "Find out more", url: "https://www.coingecko.com/en/coins/eos" },
+          version: '0.1.0'
         }
       ]
     },
