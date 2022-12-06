@@ -29,7 +29,7 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
           version: '0.1.0'
         },
         {
-          name: "Issuance",
+          name: "Supply",
           description: "Returns one the amount of coins that are circulating in the market and are in public hands.",
           externalDocs: { description: "Find out more", url: "https://www.coingecko.com/en/coins/eos" },
           version: '0.1.0'
