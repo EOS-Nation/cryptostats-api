@@ -30,8 +30,14 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
         },
         {
           name: "Supply",
-          description: "Returns one the amount of coins that are circulating in the market and are in public hands.",
-          externalDocs: { description: "Find out more", url: "https://www.coingecko.com/en/coins/eos" },
+          description: "The amount of coins that are circulating in the market and are in public hands. It is analogous to the flowing shares in the stock market.",
+          externalDocs: { description: "Find out more", url: "https://coinmarketcap.com/currencies/eos" },
+          version: '0.1.0'
+        },
+        {
+          name: "Total Supply",
+          description: "The maximum amount of coins that will ever exist in the lifetime of the cryptocurrency. It is analogous to the fully diluted shares in the stock market.",
+          externalDocs: { description: "Find out more", url: "https://coinmarketcap.com/currencies/eos" },
           version: '0.1.0'
         }
       ]
