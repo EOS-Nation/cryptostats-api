@@ -63,10 +63,10 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
     if ( block_num < 3 ) throw '[date] first genesis indexed blocks start at ' + get_genesis_date(chain);
 
     // get data
-    const b1 = (await get_balance("b1", "eosio.token", "EOS", block_num, chain)).units.value;
-    const stake = (await get_staked("b1", block_num, chain)).units.value;
+    // const b1 = (await get_balance("b1", "eosio.token", "EOS", block_num, chain)).units.value;
+    // const stake = (await get_staked("b1", block_num, chain)).units.value;
     const supply = Asset.from((await get_supply("eosio.token", "EOS", block_num, chain)).supply).units.value;
-    const total = get_core_asset(chain, supply - b1 - stake).value.valueOf();
+    const total = get_core_asset(chain, supply).value.valueOf();
  
     // response
     return res.status(200).json(total);
