@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { get_blockNum, get_rexpool, get_rexpool_delta, get_genesis_date, get_rex_date, is_rexpool, get_rex_block_num, get_core_asset, get_balance, get_balance_block_num } from "@utils/getters"
+import { get_blockNum, get_rexpool, get_rexpool_delta, get_genesis_date, get_rex_date, is_rexpool, get_rex_block_num, parse_core_asset, get_balance, get_balance_block_num } from "@utils/getters"
 import { Asset } from "@greymass/eosio"
 import { setCache } from "@utils/utils"
 
@@ -69,7 +69,7 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
     if ( start_block_num < 3 ) start_block_num = end_block_num; // below block 3
 
     if ( end_block_num < get_balance_block_num( chain ) ) {
-      const fees = get_core_asset(chain, 0);
+      const fees = parse_core_asset(chain, 0);
       return res.status(200).json({ start_block_num, end_block_num, fees });
     }
 
@@ -90,7 +90,7 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
         names: balances.end.names - balances.start.names
       }
       const delta = deltas.names + deltas.ram;
-      const fees = get_core_asset(chain, delta ? delta : 0 );
+      const fees = parse_core_asset(chain, delta ? delta : 0 );
 
       return res.status(200).json({ start_block_num, end_block_num, fees })
     }

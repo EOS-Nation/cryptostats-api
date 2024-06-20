@@ -69,7 +69,7 @@ export async function get_staked(owner: string, blockNum: number, chain: string)
     const table = "voters";
     const scope = "eosio";
     const result = await client[chain].stateTableRow<any>(code, scope, table, owner, {json: true, blockNum});
-    const staked = get_core_asset(chain);
+    const staked = parse_core_asset(chain);
     if (result.row.json) staked.units = Int64.from(result.row.json.staked);
     return staked;
 }
@@ -79,7 +79,7 @@ export async function get_balance(owner: string, code: string, symcode: string, 
     const scope = owner
     const result = await client[chain].stateTableRow<any>(code, scope, table, symcode, {json: true, blockNum});
     if (result.row.json) return Asset.from(result.row.json.balance);
-    return get_core_asset(chain);
+    return parse_core_asset(chain);
 }
 
 export async function get_supply(code: string, symcode: string, blockNum: number, chain: string): Promise<Stat> {
