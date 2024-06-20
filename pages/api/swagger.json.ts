@@ -29,13 +29,19 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
           version: '0.1.0'
         },
         {
-          name: "Supply",
+          name: "Circulating Supply",
           description: "The amount of coins that are circulating in the market and are in public hands. It is analogous to the flowing shares in the stock market.",
           externalDocs: { description: "Find out more", url: "https://coinmarketcap.com/currencies/eos" },
           version: '0.1.0'
         },
         {
           name: "Total Supply",
+          description: "Total coins created - coins that have been burned (if any) It is comparable to outstanding shares in the stock market.",
+          externalDocs: { description: "Find out more", url: "https://coinmarketcap.com/currencies/eos" },
+          version: '0.1.0'
+        },
+        {
+          name: "Max Supply",
           description: "The maximum amount of coins that will ever exist in the lifetime of the cryptocurrency. It is analogous to the fully diluted shares in the stock market.",
           externalDocs: { description: "Find out more", url: "https://coinmarketcap.com/currencies/eos" },
           version: '0.1.0'

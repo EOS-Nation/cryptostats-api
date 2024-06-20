@@ -5,11 +5,11 @@ import { setCache } from "@utils/utils"
 
 /**
  * @openapi
- * /api/{chain}/supply:
+ * /api/{chain}/max_supply:
  *   get:
  *     tags:
- *       - Circulating Supply
- *     description: The amount of coins that are circulating in the market and are in public hands. It is analogous to the flowing shares in the stock market.
+ *       - Max Supply
+ *     description: The maximum amount of coins that will ever exist in the lifetime of the cryptocurrency. It is analogous to the fully diluted shares in the stock market.
  *     parameters:
  *     - name: chain
  *       in: path
@@ -33,8 +33,8 @@ import { setCache } from "@utils/utils"
  *           application/json:
  *             schema:
  *               type: float
- *               description: circulating supply
- *               example: 1496666862.3161
+ *               description: total supply
+ *               example: 2100000000
  */
 export default async function handler( req: NextApiRequest, res: NextApiResponse<any> ) {
   setCache(res);
@@ -63,11 +63,8 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
     if ( block_num < 3 ) throw '[date] first genesis indexed blocks start at ' + get_genesis_date(chain);
 
     // get data
-    // const b1 = (await get_balance("b1", "eosio.token", "EOS", block_num, chain)).units.value;
-    // const stake = (await get_staked("b1", block_num, chain)).units.value;
-    const supply = Asset.from((await get_supply("eosio.token", "EOS", block_num, chain)).supply).units.value;
-    const eosio = Asset.from(await get_balance("eosio", "eosio.token", "EOS", block_num, chain)).units.value;
-    const total = parse_core_asset(chain, supply - eosio).value.valueOf();
+    const supply = Asset.from((await get_supply("eosio.token", "EOS", block_num, chain)).max_supply).units.value;
+    const total = parse_core_asset(chain, supply).value.valueOf();
 
     // response
     return res.status(200).json(total);

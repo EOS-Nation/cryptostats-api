@@ -2,7 +2,7 @@ import { RexPool, Stat, Global4 } from "utils/interfaces"
 import { core, client } from "utils/config"
 import { Asset, Int64 } from "@greymass/eosio"
 
-export function get_core_sym( chain: string )
+export function parse_core_sym( chain: string )
 {
     if (chain == "eos") return Asset.Symbol.from("4,EOS");
     if (chain == "wax") return Asset.Symbol.from("8,WAX");
@@ -11,9 +11,9 @@ export function get_core_sym( chain: string )
     return Asset.Symbol.from("4,EOS");
 }
 
-export function get_core_asset( chain: string, amount = 0 )
+export function parse_core_asset( chain: string, amount = 0 )
 {
-    const sym = get_core_sym( chain );
+    const sym = parse_core_sym( chain );
     if (chain == "eos") return new Asset( Int64.from(amount), sym );
     return new Asset( Int64.from(amount), sym );
 }

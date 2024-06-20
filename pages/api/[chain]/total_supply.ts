@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { get_blockNum, get_genesis_date, get_core_asset, get_balance, get_balance_block_num, get_supply, get_staked } from "@utils/getters"
+import { get_blockNum, get_genesis_date, parse_core_asset, get_balance, get_balance_block_num, get_supply, get_staked } from "@utils/getters"
 import { Asset } from "@greymass/eosio"
 import { setCache } from "@utils/utils"
 
@@ -9,7 +9,7 @@ import { setCache } from "@utils/utils"
  *   get:
  *     tags:
  *       - Total Supply
- *     description: The maximum amount of coins that will ever exist in the lifetime of the cryptocurrency. It is analogous to the fully diluted shares in the stock market.
+ *     description: The amount of coins that are circulating in the market and are in public hands. It is analogous to the flowing shares in the stock market.
  *     parameters:
  *     - name: chain
  *       in: path
@@ -64,7 +64,8 @@ export default async function handler( req: NextApiRequest, res: NextApiResponse
 
     // get data
     const supply = Asset.from((await get_supply("eosio.token", "EOS", block_num, chain)).max_supply).units.value;
-    const total = get_core_asset(chain, supply).value.valueOf();
+    // const eosio_null = Asset.from(await get_balance("eosio.null", "eosio.token", "EOS", block_num, chain)).units.value;
+    const total = parse_core_asset(chain, supply).value.valueOf();
 
     // response
     return res.status(200).json(total);
